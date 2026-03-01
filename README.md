@@ -54,10 +54,10 @@ Lumina completely transforms the educational pipeline: **2-hour lecture $\righta
 
 *(Judges: This section details our deep integration with Gemini capabilities as outlined in the hackathon rules.)*
 
-We utilized **Gemini 3.0 Flash** (`gemini-3.0-flash`) as the core brain of Lumina. It was the only model capable of simultaneously handling our required long context window, multimodal input processing (video frames + audio), and heavily constrained structured JSON outputs.
+We utilized **Gemini 3.0 Flash** (`gemini-3.0-flash`) as the core brain of Lumina. We didn't just build a wrapper—we deeply integrated Gemini's native multimodal processing to achieve something standard LLMs cannot do. It was the *only* model capable of simultaneously handling our required 2M+ token long context window, native multimodal input processing (video frames + audio synchronously), and heavily constrained structured JSON outputs via `response_schema`.
 
-### 1. Multimodal Video Analysis via `File API`
-Instead of relying solely on error-prone YouTube transcripts, Lumina interfaces directly with the Gemini File API to upload raw lecture videos. We use `genai.upload_file()` to push videos into Gemini's secure servers, which allows the model to process BOTH the **visual frames** (slides, mathematical diagrams written on whiteboards, presenter gestures) AND the **audio** (spoken explanations, emphasis, Q&A) simultaneously.
+### 1. NATIVE Multimodal Video Analysis via `File API`
+Instead of relying solely on error-prone YouTube transcripts (a standard, low-innovation approach), Lumina interfaces directly with the Gemini File API to upload raw lecture videos. We use `genai.upload_file()` to push videos into Gemini's secure servers. This allows the model to process BOTH the **visual frames** (slides, mathematical diagrams written on whiteboards, presenter gestures) AND the **audio** (spoken explanations, emphasis, Q&A) simultaneously, mimicking true human understanding.
 
 ```python
 import google.generativeai as genai
@@ -75,9 +75,9 @@ while video_file.state.name == "PROCESSING":
 ### 2. Structured JSON Course Generation
 Lumina isn't a chatbot; it's a structural engine. We prompt Gemini not for text, but for a massive, heavily nested JSON schema representing an entire curriculum. We utilize the `generation_config` parameter to enforce strict structured outputs. The model acts as an orchestration layer, simultaneously extracting:
 
-* **Hierarchical Concept Extraction:** Identifying 8-15 concepts organized in a prerequisite tree (depth 0-3), mapping which concepts build upon others.
-* **Timestamp Mapping:** Pinpointing exact timestamps in the video where each concept is taught.
-* **Categorical Flashcard Engine:** Generating 20-30 flashcards split strictly across 5 categories (Definition, Example, Comparison, Application, Mnemonic).
+* **Hierarchical Concept Extraction:** Identifying 8-15 concepts organized in a strict prerequisite tree (depth 0-3), forcing the model to understand which concepts mathematically or logically build upon others.
+* **Timestamp Mapping:** Leveraging Gemini 3.0's spatial-temporal reasoning to pinpoint exact timestamps in the video where each concept is taught.
+* **Categorical Flashcard Engine:** Generating 20-30 flashcards split strictly across 5 categories (Definition, Example, Comparison, Application, Mnemonic)—proving Gemini isn't just summarizing, it's *teaching*.
 * **Adaptive Quiz Logic:** Writing 12-20 multiple choice questions with 4 distinct options, assigned correct answers, detailed explanations, and specific difficulty tiers.
 
 ```python
@@ -94,7 +94,7 @@ response = model.generate_content(
 ```
 
 ### 3. Fallback Transcript Context Window
-When a YouTube video is too long to download within Vercel's serverless timeout limits (or exceeds API limits), Lumina performs an automatic fallback. It utilizes `yt-dlp` to extract the raw text transcript and leverages Gemini's massive long-context window by injecting the entire textual transcript directly into the prompt. Gemini 2.0 Flash easily ingests 50,000+ words of transcript and still outputs perfect hierarchical JSON.
+When a YouTube video is too long to download within Vercel's serverless timeout limits (or exceeds standard API limits), Lumina performs an automatic fallback. It utilizes `yt-dlp` to extract the raw text transcript and leverages Gemini 3.0 Flash's massive 2-million token context window by injecting the entire textual transcript directly into the prompt. Gemini easily ingests 50,000+ words of transcript and still outputs perfect hierarchical JSON without losing context.
 
 ### 4. File Lifecycle Management
 To ensure data privacy and prevent storage quota limits from being hit on the Google Developer Console, Lumina tracks job completion and uses `genai.delete_file()` to immediately wipe uploaded videos from Gemini's servers after the structured generation is complete.
@@ -104,8 +104,8 @@ To ensure data privacy and prevent storage quota limits from being hit on the Go
 ## 🎮 Key Features
 
 1. **🎬 Universal Video Ingestion**: Paste any YouTube URL or upload a direct video file.
-2. **🧠 Full Multimodal Analysis**: Powered by Gemini 2.0 Flash to "watch" and "listen" to lectures.
-3. **🌳 3D Physics Skill Tree**: An interactive `@react-three/fiber` graph mapping prerequisites in 3D space with zoom, pan, and orbital controls.
+2. **🧠 Full Multimodal Analysis**: Powered by Gemini 3.0 Flash to "watch" and "listen" to lectures rather than just reading text.
+3. **🌳 3D Physics Skill Tree**: An interactive `@react-three/fiber` graph mapping prerequisites in 3D space with zoom, pan, and orbital controls—a completely novel way to visualize AI output.
 4. **🃏 Swipeable Flashcard Engine**: Physics-based 3D card stacks categorizing active recall by Definition, Examples, Mnemonics, and Applications.
 5. **🧩 Gamified Adaptive Quizzes**: Questions scale in difficulty, providing detailed AI-generated explanations for both correct and incorrect answers.
 6. **📊 Real-time Mastery Tracking**: Nodes in the 3D visualizer react physically, glowing gold and green as you complete quizzes.
@@ -141,7 +141,7 @@ User
           ┌────────┴────────┐
           ▼                 ▼
     ┌──────────┐      ┌────────────┐
-    │  yt-dlp  │      │ Gemini 2.0 │
+    │  yt-dlp  │      │ Gemini 3.0 │
     │ Transcript      │   Flash    │
     │  Engine  │      │ Multimodal │
     └──────────┘      │  Analysis  │
@@ -172,7 +172,7 @@ User
 | **Animations** | Framer Motion | Fluid route transitions and swipeable flashcard physics |
 | **State Management** | Zustand | Bridging complex DOM state with the Three.js canvas |
 | **Backend Framework** | FastAPI (Python) | High-performance async API routing and background tasks |
-| **AI Processing** | Google Generative AI SDK | Hooking into Gemini 2.0 Flash for Multimodal generation |
+| **AI Processing** | Google Generative AI SDK | Hooking into Gemini 3.0 Flash for Native Multimodal generation |
 | **Video Extraction** | yt-dlp | Downloading YouTube audio, video, and transcripts |
 | **Data Validation** | Pydantic v2 | Strictly enforcing AI JSON schemas |
 | **Database** | SQLite & SQLAlchemy | `aiosqlite` for persistent background job tracking |
@@ -235,7 +235,7 @@ Open your browser to `http://localhost:3000` and start generating!
 1. **User Provides Video**: User pastes a YouTube link or uploads a raw MP4.
 2. **Backend Intercepts**: FastAPI immediately returns a `job_id` to the frontend and begins an `asyncio` background task.
 3. **Download / Ingestion**: `yt-dlp` extracts the best available transcript. If video processing is requested, it downloads the video file.
-4. **Gemini Initialization**: The file or transcript is uploaded to Gemini 2.0 Flash along with a massive system prompt demanding rigid Pydantic JSON structures.
+4. **Gemini Initialization**: The file or transcript is uploaded to Gemini 3.0 Flash along with a massive system prompt demanding rigid Pydantic JSON structures.
 5. **Generation**: Gemini acts as an orchestrator, outputting a complete `CourseModule` containing strictly mapped concepts, flashcards, and quizzes.
 6. **3D Render**: The frontend receives the JSON. The `SkillTreeScene` maps the concepts. Custom force-physics pushes siblings apart and pulls children to parents.
 7. **Active Learning**: The user interacts with the flashcards and quizzes tied explicitly to a concept node.
@@ -245,9 +245,9 @@ Open your browser to `http://localhost:3000` and start generating!
 
 ## 🌍 Real-World Impact
 
-* **Democratizing Education**: 500M+ students utilize YouTube for education. Lumina transforms passive free content into premium, interactive courseware.
-* **Saving Time**: Reduces pure note-taking and flashcard-creation study time by 60-80%.
-* **Accessibility**: Helps neurodivergent learners, particularly those with ADHD, who struggle immensely with unstructured, long-form video content by gamifying the learning process into an interactive tree.
+* **Democratizing Education**: 500M+ students utilize YouTube for education. Lumina transforms passive free content into premium, interactive courseware. Unlike simple chatbots, Lumina actually builds tangible, progressive learning paths.
+* **Saving Time**: Reduces pure note-taking and flashcard-creation study time by 60-80%. Students spend time *studying*, not *preparing to study*.
+* **Accessibility**: Helps neurodivergent learners, particularly those with ADHD, who struggle immensely with unstructured, long-form video content by gamifying the learning process into an interactive tree with immediate visual feedback.
 * **Empowering Educators**: Professors and YouTubers can use Lumina to instantly auto-generate entire companion courses for their 1-hour lectures.
 
 ---

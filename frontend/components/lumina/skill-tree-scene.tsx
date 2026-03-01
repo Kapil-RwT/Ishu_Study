@@ -66,16 +66,19 @@ function ConceptNode({
 
   return (
     <group position={position}>
-      <Html center zIndexRange={[100, 0]}>
+      <Html
+        center
+        distanceFactor={15}
+        zIndexRange={[100, 0]}
+      >
         <div
+          className="relative flex items-center justify-center cursor-pointer group"
           onClick={(e) => {
             e.stopPropagation()
             onSelect()
           }}
-          onPointerOver={() => setHovered(true)}
-          onPointerOut={() => setHovered(false)}
-          className={`group flex flex-col items-center justify-center cursor-pointer transition-all duration-500 ease-out ${hovered || isSelected ? 'scale-125 z-10' : 'scale-100 z-0'
-            }`}
+          onPointerEnter={() => setHovered(true)}
+          onPointerLeave={() => setHovered(false)}
           role="button"
           tabIndex={0}
           aria-label={`${concept.title}, Mastery level: ${mastery}%`}
@@ -179,7 +182,7 @@ function ConceptNode({
 
           {/* Accessible Text Label UI */}
           <div
-            className={`-mt-2 flex flex-col items-center px-4 py-2 rounded-xl backdrop-blur-md border border-white/10 shadow-xl transition-all duration-300 ${hovered || isSelected
+            className={`absolute top-[90%] left-1/2 -translate-x-1/2 flex flex-col items-center px-4 py-2 rounded-xl backdrop-blur-md border border-white/10 shadow-xl transition-all duration-300 ${hovered || isSelected
               ? 'bg-[#0f172a]/90 opacity-100 scale-100 translate-y-0'
               : 'bg-[#0f172a]/50 opacity-80 scale-95 translate-y-1'
               }`}

@@ -19,33 +19,9 @@
 <br/>
 
 > **🏆 Hackathon Submission Notice**<br>
-> This project is proudly submitted for the **PIXEL.GEMINI Hackathon**. Lumina extensively utilizes the **Google Gemini API** (specifically `gemini-3.0-flash`) for multimodal video analysis, transcript ingestion, and fully structured educational JSON generation. <br>[View our Devpost Submission Here](#)
+> This project is proudly submitted for the **PIXEL.GEMINI Hackathon**. Lumina extensively utilizes the **Google Gemini API** (specifically `gemini-3.0-flash`) for multimodal video analysis, transcript ingestion, and fully structured educational JSON generation.
 
----
 
-## 📺 Demo
-
-**Placeholder: Live URL** | **Placeholder: YouTube Demo Video Link**
-
-<details>
-<summary>📸 View Application Screenshots (Click to Expand)</summary>
-<br>
-
-| Landing Page | Processing State |
-| :---: | :---: |
-| ![Landing Page Placeholder](https://via.placeholder.com/600x350/0f172a/ffffff?text=Landing+Page) | ![Processing State Placeholder](https://via.placeholder.com/600x350/0f172a/ffffff?text=Processing+State) |
-
-| 3D Skill Tree | Swipeable Flashcards |
-| :---: | :---: |
-| ![Skill Tree Placeholder](https://via.placeholder.com/600x350/0f172a/ffffff?text=3D+Skill+Tree) | ![Flashcards Placeholder](https://via.placeholder.com/600x350/0f172a/ffffff?text=Active+Recall+Flashcards) |
-
-| Adaptive Quiz | Progress & Library |
-| :---: | :---: |
-| ![Quiz Placeholder](https://via.placeholder.com/600x350/0f172a/ffffff?text=Adaptive+Quiz) | ![Library Placeholder](https://via.placeholder.com/600x350/0f172a/ffffff?text=Saved+Library) |
-
-</details>
-
----
 
 ## 💡 The Problem
 
@@ -74,11 +50,11 @@ Lumina completely transforms the educational pipeline: **2-hour lecture $\righta
 
 ---
 
-## 🧠 How We Use the Google Gemini API
+## 🧠 How I Use the Google Gemini API
 
 *(Judges: This section details our deep integration with Gemini capabilities as outlined in the hackathon rules.)*
 
-We utilized **Gemini 2.0 Flash** (`gemini-2.0-flash`) as the core brain of Lumina. It was the only model capable of simultaneously handling our required long context window, multimodal input processing (video frames + audio), and heavily constrained structured JSON outputs.
+We utilized **Gemini 3.0 Flash** (`gemini-3.0-flash`) as the core brain of Lumina. It was the only model capable of simultaneously handling our required long context window, multimodal input processing (video frames + audio), and heavily constrained structured JSON outputs.
 
 ### 1. Multimodal Video Analysis via `File API`
 Instead of relying solely on error-prone YouTube transcripts, Lumina interfaces directly with the Gemini File API to upload raw lecture videos. We use `genai.upload_file()` to push videos into Gemini's secure servers, which allows the model to process BOTH the **visual frames** (slides, mathematical diagrams written on whiteboards, presenter gestures) AND the **audio** (spoken explanations, emphasis, Q&A) simultaneously.

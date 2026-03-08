@@ -27,7 +27,8 @@ async def _run_ytdlp(args: list[str], timeout: int = 600) -> tuple[str, str, int
 
     Returns (stdout, stderr, returncode).
     """
-    cmd = [sys.executable, "-m", "yt_dlp", *args]
+    # Add --no-check-certificate to bypass corporate SSL interception
+    cmd = [sys.executable, "-m", "yt_dlp", "--no-check-certificate", *args]
     logger.info("Running: %s", " ".join(cmd))
 
     proc = await asyncio.create_subprocess_exec(

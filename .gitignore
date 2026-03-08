@@ -88,3 +88,4 @@ __v0_jsx-dev-runtime.ts
 # Project specific
 backend/uploads/
 backend/.pytest_cache/
+*.db

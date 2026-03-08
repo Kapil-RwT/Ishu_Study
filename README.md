@@ -182,40 +182,94 @@ User
 ## 🚀 Getting Started
 
 ### Prerequisites
-* **Node.js 18+**
-* **Python 3.10+**
-* **Google Gemini API Key** (Get one at [Google AI Studio](https://aistudio.google.com/))
-* **FFmpeg** (installed on your system path for `yt-dlp` processing)
+* **Node.js 18+** and **npm**
+* **Python 3.10.x** (⚠️ **Important**: Python 3.14+ is not supported due to package compatibility)
+* **Google Gemini API Key** with billing enabled (Get one at [Google AI Studio](https://aistudio.google.com/apikey))
+* **FFmpeg** (installed on your system path for `yt-dlp` video processing)
 
-### 1. Backend Setup
+### 1. Clone the Repository
 ```bash
-cd backend
-python -m venv venv
-
-# Windows
-venv\Scripts\activate
-# Mac/Linux
-source venv/bin/activate
-
-pip install -r requirements.txt
-
-# Create .env and add: GEMINI_API_KEY=your_key_here
-cp .env.example .env 
-
-# Start the async server
-python -m uvicorn main:app --host 0.0.0.0 --port 8000
+git clone https://github.com/YOUR_USERNAME/Lumina.git
+cd Lumina
 ```
 
-### 2. Frontend Setup
+### 2. Backend Setup
 ```bash
+cd backend
+
+# Use Python 3.10.x (recommended: 3.10.12)
+# If using pyenv: pyenv local 3.10.12
+python3.10 -m venv venv
+
+# Activate virtual environment
+# Windows:
+venv\Scripts\activate
+# Mac/Linux:
+source venv/bin/activate
+
+# Install dependencies
+pip install --upgrade pip
+pip install -r requirements.txt
+
+# Configure environment variables
+cp .env.example .env
+# Edit .env and add your Gemini API key:
+# GEMINI_API_KEY=your_actual_api_key_here
+
+# Start the FastAPI server
+uvicorn main:app --reload --port 8000
+```
+
+The backend will be available at `http://localhost:8000`
+
+### 3. Frontend Setup
+```bash
+# In a new terminal
 cd frontend
+
+# Install dependencies
 npm install
 
-# Start the development server
+# (Optional) Configure API URL
+cp .env.example .env.local
+# Default: NEXT_PUBLIC_API_BASE_URL=http://localhost:8000/api
+
+# Start the Next.js development server
 npm run dev
 ```
 
-Open your browser to `http://localhost:3000` and start generating!
+The frontend will be available at `http://localhost:3000`
+
+### 4. Start Learning!
+1. Open `http://localhost:3000` in your browser
+2. Paste a YouTube URL or upload a video file
+3. Wait for Gemini to analyze the content (1-3 minutes)
+4. Explore your interactive 3D skill tree!
+
+---
+
+## ⚠️ Troubleshooting
+
+### Python Version Issues
+- **Error**: `greenlet` or `pydantic-core` build failures
+- **Solution**: Ensure you're using Python 3.10.x (not 3.11+, 3.14+)
+  ```bash
+  python --version  # Should show 3.10.x
+  ```
+
+### SSL Certificate Errors (Corporate Networks)
+- **Error**: `[SSL: CERTIFICATE_VERIFY_FAILED]`
+- **Solution**: Already handled! The code includes `--no-check-certificate` for `yt-dlp`
+
+### Gemini API Errors
+- **Error**: `404 models/gemini-x.x not found`
+- **Solution**: Ensure your API key has billing enabled and supports `gemini-2.5-flash`
+- **Error**: `504 Deadline expired`
+- **Solution**: Video is too long. Try a shorter video (< 30 minutes) or ensure your API key has sufficient quota
+
+### Font Loading Issues (Next.js)
+- **Error**: TLS errors when loading Google Fonts
+- **Solution**: Already fixed! Fonts are bundled locally in `frontend/public/fonts/`
 
 ---
 
